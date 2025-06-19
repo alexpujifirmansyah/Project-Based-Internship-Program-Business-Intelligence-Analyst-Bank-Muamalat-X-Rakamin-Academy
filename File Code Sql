@@ -1,0 +1,73 @@
+-- Soal 1
+-- Tentukan masing-masing primary key pada 4 dataset penjualan
+
+-- 1. Primary key tabel Customer: 
+ALTER TABLE sejahtera_bersama.Customers
+ADD PRIMARY KEY (CustomerID) NOT ENFORCED;
+
+-- 2. Primary key tabel Orders:
+ALTER TABLE sejahtera_bersama.Orders
+ADD PRIMARY KEY (ProdNumber) NOT ENFORCED;
+
+-- 3. Primary key tabel Products: 
+ALTER TABLE sejahtera_bersama.Products
+ADD PRIMARY KEY (Category) NOT ENFORCED;
+
+-- 4. Primary key tabel ProductCategory: 
+ALTER TABLE sejahtera_bersama.ProductCategory
+ADD PRIMARY KEY (CategoryID) NOT ENFORCED;
+
+
+
+
+-- Soal 2
+-- Tentukan relationship dari ke-4 table tersebut
+
+-- 1. Tidak menggunakan tabel Customer sebagai Foreign Key
+
+-- 2. Relationship (Foreign Key) tabel Orders
+ALTER TABLE sejahtera_bersama.Orders
+ADD CONSTRAINT FK_Orders_Customers
+FOREIGN KEY (CustomerID) REFERENCES sejahtera_bersama.Customers(CustomerID) NOT ENFORCED;
+
+-- 3. Relationship (Foreign Key) tabel Products
+ALTER TABLE sejahtera_bersama.Products
+ADD CONSTRAINT FK_Orders_Products
+FOREIGN KEY (ProdNumber) REFERENCES sejahtera_bersama.Orders(ProdNumber) NOT ENFORCED;
+
+-- 4. Relationship (Foreign Key) tabel ProductCategory
+ALTER TABLE sejahtera_bersama.ProductCategory
+ADD CONSTRAINT FK_Products_ProductCategory
+FOREIGN KEY (CategoryID) REFERENCES sejahtera_bersama.Products(Category) NOT ENFORCED;
+
+
+
+
+-- Soal 3
+-- Sebagai BI Analyst PT Sejahtera Bersama, kita akan membuat sebuah table_master
+
+CREATE OR REPLACE TABLE sejahtera_bersama.tabel_master AS
+SELECT
+    o.Date AS order_date,
+    pc.CategoryName AS category_name,
+    p.ProdName AS product_name,
+    p.Price AS product_price,
+    o.Quantity AS order_qty,
+    (o.Quantity * p.Price) AS total_sales,
+    c.CustomerEmail AS cust_email,
+    c.CustomerCity AS cust_city
+     
+FROM
+  `sejahtera_bersama.Customers` AS c 
+INNER JOIN
+  `sejahtera_bersama.Orders` AS o ON c.CustomerID = o.CustomerID 
+INNER JOIN
+  `sejahtera_bersama.Products` AS p ON o.ProdNumber = p.ProdNumber
+INNER JOIN
+  `sejahtera_bersama.ProductCategory` AS pc ON p.Category = pc.CategoryID 
+
+ORDER BY 
+    order_date ASC,
+    order_qty ASC;
+
+

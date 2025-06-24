@@ -71,7 +71,7 @@ ORDER BY
     order_qty ASC;
 
 
-
+-- Sedkit pembersihan data customers pada kolom cust_email
 UPDATE
   `sejahtera_bersama.tabel_master`
 SET
@@ -88,7 +88,8 @@ SET
 WHERE
   TRUE;
 
--- Jika Anda hanya ingin melihat hasilnya tanpa mengubah tabel:
+
+-- Jika untuk ingin melihat hasilnya tanpa mengubah tabel:
 SELECT
   cust_email AS original_email,
   SPLIT(SPLIT(cust_email, '#')[OFFSET(0)], '@')[OFFSET(0)] AS username

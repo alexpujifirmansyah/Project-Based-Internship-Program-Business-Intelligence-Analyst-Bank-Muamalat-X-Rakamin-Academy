@@ -71,3 +71,28 @@ ORDER BY
     order_qty ASC;
 
 
+
+UPDATE
+  `sejahtera_bersama.tabel_master`
+SET
+  cust_email = (
+    -- Langkah 2: Ambil bagian sebelum '@' dari hasil langkah 1
+    SELECT
+      SPLIT(email_part, '@')[OFFSET(0)]
+    FROM (
+      -- Langkah 1: Ambil bagian sebelum '#'
+      SELECT
+        SPLIT(cust_email, '#')[OFFSET(0)] AS email_part
+    )
+  )
+WHERE
+  TRUE;
+
+-- Jika Anda hanya ingin melihat hasilnya tanpa mengubah tabel:
+SELECT
+  cust_email AS original_email,
+  SPLIT(SPLIT(cust_email, '#')[OFFSET(0)], '@')[OFFSET(0)] AS username
+FROM
+  `sejahtera_bersama.tabel_master`
+LIMIT
+  10;
